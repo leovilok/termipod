@@ -608,7 +608,10 @@ class ItemArea:
         bold_style = curses.color_pair(1)
         select_style = curses.color_pair(3)
         highlight_style = curses.color_pair(4)
-        self.win.move(line, 0)
+        try:
+            self.win.move(line, 0)
+        except  curses.error:
+            pass
         self.win.clrtoeol()
 
         if not string:
@@ -616,11 +619,17 @@ class ItemArea:
             return
 
         if bold:
-            self.win.addstr(line, 0, string, bold_style)
+            try:
+                self.win.addstr(line, 0, string, bold_style)
+            except curses.error:
+                pass
         else:
             # If line is in user selection
             if self.selection[line+self.first_line] in self.user_selection:
-                self.win.addstr(line, 0, string, select_style)
+                try:
+                    self.win.addstr(line, 0, string, select_style)
+                except curses.error:
+                    pass
 
             elif self.highlight_on:
                 styles = (normal_style, highlight_style)
@@ -634,11 +643,17 @@ class ItemArea:
                 written = 0
                 style_idx = 0
                 for part in parts:
-                    self.win.addstr(line, written, part, styles[style_idx])
+                    try:
+                        self.win.addstr(line, written, part, styles[style_idx])
+                    except curses.error:
+                        pass
                     written += len(part)
                     style_idx = (style_idx+1) % 2
             else:
-                self.win.addstr(line, 0, string, normal_style)
+                try:
+                    self.win.addstr(line, 0, string, normal_style)
+                except curses.error:
+                    pass
 
         self.win.refresh()
 
@@ -954,9 +969,15 @@ class TitleArea:
         self.print(title)
 
     def print(self, string):
-        self.win.move(0, 0)
+        try:
+            self.win.move(0, 0)
+        except  curses.error:
+            pass
         self.win.clrtoeol()
-        self.win.addstr(0, 0, str(string))
+        try:
+            self.win.addstr(0, 0, str(string))
+        except curses.error:
+            pass
         self.win.refresh()
 
 
@@ -978,9 +999,15 @@ class StatusArea:
         else:
             short_string = string
 
-        self.win.move(0, 0)
+        try:
+            self.win.move(0, 0)
+        except  curses.error:
+            pass
         self.win.clrtoeol()
-        self.win.addstr(0, 0, str(short_string))
+        try:
+            self.win.addstr(0, 0, str(short_string))
+        except curses.error:
+            pass
         self.win.refresh()
 
     def run_command(self, prefix):
@@ -1037,8 +1064,14 @@ class PopupArea:
         self.win.border('|', '|', '-', '-', '+', '+', '+', '+')
 
         for line in range(len(lines)):
-            self.win.move(line+1, self.inner_margin)
-            self.win.addstr(line+1, self.inner_margin, str(lines[line]))
+            try:
+                self.win.move(line+1, self.inner_margin)
+            except  curses.error:
+                pass
+            try:
+                self.win.addstr(line+1, self.inner_margin, str(lines[line]))
+            except curses.error:
+                pass
         self.win.refresh()
 
         key = screen.getch()
