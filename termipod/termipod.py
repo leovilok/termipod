@@ -97,8 +97,8 @@ def main():
             if isinstance(args.export_channels, bool):
                 output = sys.stdout
             else:
-                output = args.export_channels
-            print(channels, file=open(output, 'w'))
+                output = open(args.export_channels, 'w')
+            print(channels, file=output)
 
 
 if __name__ == "__main__":
